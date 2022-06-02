@@ -34,18 +34,19 @@ public class DBService {
 		}
 		//check for devices to remove 
 		
-//		Map<String,Device> devicesOfCurrentThing = devicesMap.
+		List<Device> devicesOfCurrentThing = ioTThing.getConnectedDevices();
 		
-//		 for (Map.Entry<String,Device> entry : devicesMap.entrySet()) {
-//			 if(entry.getValue().ioTThing.ID == ioTThing.ID && ! ioTThing.getConnectedDevices().contains(entry.getValue()))
-//				 devicesMap.remove(entry.getKey());
-//		 }
+		 for (Map.Entry<String,Device> entry : devicesMap.entrySet()) {
+			 if(entry.getValue().ioTThingID == ioTThing.ID && ! devicesOfCurrentThing.contains(entry.getValue()))
+				 devicesMap.remove(entry.getKey());
+		 }
 	}
 	
 	
 	//methods for http requests
 	
-
+	//things
+	
 	public List<IoTThing> getAllIoTThings(){
 		return ioTThingMap.values().stream().collect(Collectors.toList());
 	}
@@ -72,8 +73,50 @@ public class DBService {
 		return ioTThingMap.values().stream().filter((x)-> t.equals(x.type)).toList();
 	}
 	
+	//devices
 	
+	public List<Device> getAllDevices(){
+		return devicesMap.values().stream().collect(Collectors.toList());
+	}
 	
+	public Device getDevicesByID(String ID) {
+		if(devicesMap.containsKey(ID))
+			return devicesMap.get(ID);
+		else
+			return null;
+	}
+	
+	public List<Device> getDevicesByModel(String model){
+		return devicesMap.values().stream().filter((x)-> model.equals(x.model)).toList();
+	}
+	
+	public List<Device> getDevicesByManufacturer(String manufacturer){
+		return devicesMap.values().stream().filter((x)-> manufacturer.equals(x.manufacturer)).toList();
+	}
+	
+	public List<Device> getDevicesByType(String type){
+		return devicesMap.values().stream().filter((x)-> type.equals(x.type.toString())).toList();
+	}
+	
+	public List<IoTThing> getThingsByFields(String type, String model, String manufacturer){
+		List<IoTThing> ThingsList = ioTThingMap.values().stream().collect(Collectors.toList());
+		List<IoTThing> filteredThingsList = new ArrayList<IoTThing>();
+		for(IoTThing ioTThing : ThingsList) {
+			if(ioTThing.type.toString().equals(type)&& ioTThing.model.equals(model) && ioTThing.manufacturer.equals(manufacturer))
+				filteredThingsList.add(ioTThing);
+		}
+		return filteredThingsList;
+	}
+	
+	public List<Device> getDevicesByFields(String type, String model, String manufacturer){
+		List<Device> deviceList = devicesMap.values().stream().collect(Collectors.toList());
+		List<Device> filteredDevicesList = new ArrayList<Device>();
+		for(Device device : deviceList) {
+			if(device.type.toString().equals(type)&& device.model.equals(model) && device.manufacturer.equals(manufacturer))
+				filteredDevicesList.add(device);
+		}
+		return filteredDevicesList;
+	}
 	
 	
 	public static void main(String[] args) throws InterruptedException {

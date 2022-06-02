@@ -18,9 +18,12 @@ public class IoTThing extends Hardware {
 		super();
 	}
 
+	public void updateConnectedDevices(List<Device> connectedDevices) {
+		this.connectedDevices = connectedDevices;
+	}
+	
 	
 	public void addConnectedDevice(Device device) {
-		
 		connectedDevices.add(device);
 	}
 	

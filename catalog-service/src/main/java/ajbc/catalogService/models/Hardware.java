@@ -18,7 +18,6 @@ public abstract class Hardware {
 	
 	public Hardware() {
 		ID = UUID.randomUUID().toString();
-
 	}
 }
 

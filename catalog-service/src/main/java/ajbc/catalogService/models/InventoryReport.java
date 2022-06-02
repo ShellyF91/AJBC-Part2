@@ -85,9 +85,10 @@ public class InventoryReport {
 	
 	public static void main(String[] args) throws InterruptedException {
 		IoTThing thing = new IoTThing(Type.ACTUATOR, "2017-ep", "lalala", new ArrayList<Device>()); 
-		thing.addConnectedDevice(new Device(Type.SENSOR, "best model", "Solaredge", thing));
+		thing.addConnectedDevice(new Device(Type.SENSOR, "best model", "Solaredge", thing.ID));
 		InventoryReport report = new InventoryReport(thing);
 		report.startInventoryReport();
+		System.out.println(thing);
 	}
 
 }

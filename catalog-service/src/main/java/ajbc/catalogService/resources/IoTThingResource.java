@@ -39,26 +39,33 @@ public class IoTThingResource {
 	
 //	@GET
 //	@Path("/{model}")
-//	public List<IoTThing> getThingsByModel(@QueryParam("model") String model){
-//		return dbService.getThingsByModel(model);
+//	public Response getThingsByModel(@QueryParam("model") String model){
+//		List<IoTThing> list = dbService.getThingsByModel(model);
+//		return Response.ok().entity(list).build();
 //	}
 	
 //	@GET
 //	@Path("/{manufacturer}")
-//	public List<IoTThing> getThingsByManufacturer(@QueryParam("manufacturer") String manufacturer){
-//		return dbService.getThingsByManufacturer(manufacturer);
+//	public Response getThingsByManufacturer(@QueryParam("manufacturer") String manufacturer){
+//		List<IoTThing> list = dbService.getThingsByManufacturer(manufacturer);
+//		return Response.ok().entity(list).build();
 //	}
-	
-	@GET
-	@Path("/{type}")
-	public List<IoTThing> getThingsByType(@QueryParam("type") String type){
-		return dbService.getThingsByType(type);
-	}
 	
 //	@GET
-//	public List<IoTThing> getThingsByProperties(@BeanParam ThingsFilterBean thingsFilterBean){
-//		if
+//	@Path("/{type}")
+//	public Response getThingsByType(@QueryParam("type") String type){
+//		List<IoTThing> list = dbService.getThingsByType(type);
+//		return Response.ok().entity(list).build();
 //	}
+	
+	
+	@GET
+	@Path("/filter")
+	public Response getThingsByFields(@BeanParam ThingsFilterBean thingsFilterBean) {
+		List<IoTThing> filteredList = dbService.getThingsByFields(thingsFilterBean.getType(), thingsFilterBean.getModel(), thingsFilterBean.getManufacturer());
+		return Response.ok().entity(filteredList).build();
+	}
+
 	 
 
 }

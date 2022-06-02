@@ -2,11 +2,11 @@ package ajbc.catalogService.models;
 
 public class Device extends Hardware {
 	
-	public IoTThing ioTThing;
+	public String ioTThingID;
 
-	public Device(Type type, String model, String manufacturer, IoTThing ioTThing) {
+	public Device(Type type, String model, String manufacturer, String ioTThingID) {
 		super(type, model, manufacturer);
-		this.ioTThing = ioTThing;
+		this.ioTThingID = ioTThingID;
 	}
 	
 	public Device() {
