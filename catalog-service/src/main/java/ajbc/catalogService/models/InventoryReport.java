@@ -25,16 +25,7 @@ public class InventoryReport {
 	
 	public void startInventoryReport() throws InterruptedException {
 		ScheduledExecutorService clientsService = Executors.newScheduledThreadPool(NUM_THREADS);
-//		for (int i = 0; i < NUM_THREADS; i++) {
-//			ioTThing.simulateInventoryChange();
-//			Thread.sleep(10000);
 		clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing),1, 5, TimeUnit.SECONDS);
-//			InventoryReportRunnable inventoryReportRunnable = new InventoryReportRunnable(ioTThing);
-//			clientsService.schedule(inventoryReportRunnable, 10, TimeUnit.SECONDS);
-//			clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing), 0, 10, TimeUnit.SECONDS);
-//		}
-//		clientsService.shutdown();
-//		clientsService.awaitTermination(20, TimeUnit.SECONDS);
 	}
 	
 	public class InventoryReportRunnable implements Runnable{

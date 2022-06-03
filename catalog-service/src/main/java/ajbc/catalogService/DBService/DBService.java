@@ -52,7 +52,7 @@ public class DBService {
 		return ioTThingMap.values().stream().collect(Collectors.toList());
 	}
 	
-	public IoTThing getThingsByID(String ID) {
+	public IoTThing getThingsByID(UUID ID) {
 		if(ioTThingMap.containsKey(ID))
 			return ioTThingMap.get(ID);
 		else
@@ -73,6 +73,18 @@ public class DBService {
 		Type t = Type.valueOf(type);
 		return ioTThingMap.values().stream().filter((x)-> t.equals(x.getType())).toList();
 	}
+	
+	public List<IoTThing> getThingsByFields(String type, String model, String manufacturer){
+		List<IoTThing> ThingsList = ioTThingMap.values().stream().collect(Collectors.toList());
+		List<IoTThing> filteredThingsList = new ArrayList<IoTThing>();
+		for(IoTThing ioTThing : ThingsList) {
+			if(ioTThing.getType().toString().equals(type)&& ioTThing.getModel().equals(model) && ioTThing.getManufacturer().equals(manufacturer))
+				filteredThingsList.add(ioTThing);
+		}
+		return filteredThingsList;
+	}
+	
+	
 	
 	//devices
 	
@@ -99,16 +111,7 @@ public class DBService {
 		return devicesMap.values().stream().filter((x)-> type.equals(x.getType().toString())).toList();
 	}
 	
-	public List<IoTThing> getThingsByFields(String type, String model, String manufacturer){
-		List<IoTThing> ThingsList = ioTThingMap.values().stream().collect(Collectors.toList());
-		List<IoTThing> filteredThingsList = new ArrayList<IoTThing>();
-		for(IoTThing ioTThing : ThingsList) {
-			if(ioTThing.getType().toString().equals(type)&& ioTThing.getModel().equals(model) && ioTThing.getManufacturer().equals(manufacturer))
-				filteredThingsList.add(ioTThing);
-		}
-		return filteredThingsList;
-	}
-	
+
 	public List<Device> getDevicesByFields(String type, String model, String manufacturer){
 		List<Device> deviceList = devicesMap.values().stream().collect(Collectors.toList());
 		List<Device> filteredDevicesList = new ArrayList<Device>();
