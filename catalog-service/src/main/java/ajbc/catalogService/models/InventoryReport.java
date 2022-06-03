@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
@@ -16,19 +17,24 @@ public class InventoryReport {
 	
 	private IoTThing ioTThing;
 	private final String SERVER_NAME = "localhost";
-	private final int SERVER_PORT = 9090, NUM_THREADS = 1;
+	private final int SERVER_PORT = 9090, NUM_THREADS = 5;
 	
 	public InventoryReport(IoTThing ioTThing) {
 		this.ioTThing = ioTThing;
 	}
 	
 	public void startInventoryReport() throws InterruptedException {
-		ExecutorService clientsService = Executors.newFixedThreadPool(NUM_THREADS);
-		for (int i = 0; i < NUM_THREADS; i++) {
-			clientsService.execute(new InventoryReportRunnable(ioTThing));
-		}
-		clientsService.shutdown();
-		clientsService.awaitTermination(20, TimeUnit.SECONDS);
+		ScheduledExecutorService clientsService = Executors.newScheduledThreadPool(NUM_THREADS);
+//		for (int i = 0; i < NUM_THREADS; i++) {
+//			ioTThing.simulateInventoryChange();
+//			Thread.sleep(10000);
+		clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing),1, 5, TimeUnit.SECONDS);
+//			InventoryReportRunnable inventoryReportRunnable = new InventoryReportRunnable(ioTThing);
+//			clientsService.schedule(inventoryReportRunnable, 10, TimeUnit.SECONDS);
+//			clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing), 0, 10, TimeUnit.SECONDS);
+//		}
+//		clientsService.shutdown();
+//		clientsService.awaitTermination(20, TimeUnit.SECONDS);
 	}
 	
 	public class InventoryReportRunnable implements Runnable{
@@ -76,16 +82,14 @@ public class InventoryReport {
 					}	
 				if(writer != null)
 					writer.close();
-			}
-			
+			}	
 		}
-		
-		
+
 	}
 	
 	public static void main(String[] args) throws InterruptedException {
 		IoTThing thing = new IoTThing(Type.ACTUATOR, "2017-ep", "lalala", new ArrayList<Device>()); 
-		thing.addConnectedDevice(new Device(Type.SENSOR, "best model", "Solaredge", thing.ID));
+		thing.addConnectedDevice(new Device(Type.SENSOR, "best model", "Solaredge", thing.getID()));
 		InventoryReport report = new InventoryReport(thing);
 		report.startInventoryReport();
 		System.out.println(thing);

@@ -3,6 +3,7 @@ package ajbc.catalogService.DBService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import ajbc.catalogService.DB.DBMock;
@@ -14,8 +15,8 @@ import ajbc.catalogService.models.Type;
 public class DBService {
 	
 	DBMock db; 
-	static Map<String,IoTThing> ioTThingMap;
-	static Map<String, Device> devicesMap;
+	static Map<UUID,IoTThing> ioTThingMap;
+	static Map<UUID, Device> devicesMap;
 	
 	public DBService() {
 		db = DBMock.getInstance();
@@ -25,19 +26,19 @@ public class DBService {
 	
 	public void updateDB(IoTThing ioTThing){
 		//update IoTThings map 
-		ioTThingMap.put(ioTThing.ID, ioTThing);
+		ioTThingMap.put(ioTThing.getID(), ioTThing);
 		//update devices map 
 		List<Device> devicesList = ioTThing.getConnectedDevices();
 		//put new devices in devices map
 		for(int i = 0; i < devicesList.size(); i++) {
-			devicesMap.put(devicesList.get(i).ID, devicesList.get(i));
+			devicesMap.put(devicesList.get(i).getID(), devicesList.get(i));
 		}
 		//check for devices to remove 
 		
 		List<Device> devicesOfCurrentThing = ioTThing.getConnectedDevices();
 		
-		 for (Map.Entry<String,Device> entry : devicesMap.entrySet()) {
-			 if(entry.getValue().ioTThingID == ioTThing.ID && ! devicesOfCurrentThing.contains(entry.getValue()))
+		 for (Map.Entry<UUID,Device> entry : devicesMap.entrySet()) {
+			 if(entry.getValue().ioTThingID == ioTThing.getID() && ! devicesOfCurrentThing.contains(entry.getValue()))
 				 devicesMap.remove(entry.getKey());
 		 }
 	}
@@ -60,17 +61,17 @@ public class DBService {
 
 	
 	public List<IoTThing> getThingsByModel(String model){
-		return ioTThingMap.values().stream().filter((x)-> model.equals(x.model)).toList();
+		return ioTThingMap.values().stream().filter((x)-> model.equals(x.getModel())).toList();
 	}
 	
 	public List<IoTThing> getThingsByManufacturer(String manufacturer){
-		return ioTThingMap.values().stream().filter((x)-> manufacturer.equals(x.manufacturer)).toList();
+		return ioTThingMap.values().stream().filter((x)-> manufacturer.equals(x.getManufacturer())).toList();
 	}
 	
 	
 	public List<IoTThing> getThingsByType(String type){
 		Type t = Type.valueOf(type);
-		return ioTThingMap.values().stream().filter((x)-> t.equals(x.type)).toList();
+		return ioTThingMap.values().stream().filter((x)-> t.equals(x.getType())).toList();
 	}
 	
 	//devices
@@ -87,22 +88,22 @@ public class DBService {
 	}
 	
 	public List<Device> getDevicesByModel(String model){
-		return devicesMap.values().stream().filter((x)-> model.equals(x.model)).toList();
+		return devicesMap.values().stream().filter((x)-> model.equals(x.getModel())).toList();
 	}
 	
 	public List<Device> getDevicesByManufacturer(String manufacturer){
-		return devicesMap.values().stream().filter((x)-> manufacturer.equals(x.manufacturer)).toList();
+		return devicesMap.values().stream().filter((x)-> manufacturer.equals(x.getManufacturer())).toList();
 	}
 	
 	public List<Device> getDevicesByType(String type){
-		return devicesMap.values().stream().filter((x)-> type.equals(x.type.toString())).toList();
+		return devicesMap.values().stream().filter((x)-> type.equals(x.getType().toString())).toList();
 	}
 	
 	public List<IoTThing> getThingsByFields(String type, String model, String manufacturer){
 		List<IoTThing> ThingsList = ioTThingMap.values().stream().collect(Collectors.toList());
 		List<IoTThing> filteredThingsList = new ArrayList<IoTThing>();
 		for(IoTThing ioTThing : ThingsList) {
-			if(ioTThing.type.toString().equals(type)&& ioTThing.model.equals(model) && ioTThing.manufacturer.equals(manufacturer))
+			if(ioTThing.getType().toString().equals(type)&& ioTThing.getModel().equals(model) && ioTThing.getManufacturer().equals(manufacturer))
 				filteredThingsList.add(ioTThing);
 		}
 		return filteredThingsList;
@@ -112,7 +113,7 @@ public class DBService {
 		List<Device> deviceList = devicesMap.values().stream().collect(Collectors.toList());
 		List<Device> filteredDevicesList = new ArrayList<Device>();
 		for(Device device : deviceList) {
-			if(device.type.toString().equals(type)&& device.model.equals(model) && device.manufacturer.equals(manufacturer))
+			if(device.getType().toString().equals(type)&& device.getModel().equals(model) && device.getManufacturer().equals(manufacturer))
 				filteredDevicesList.add(device);
 		}
 		return filteredDevicesList;

@@ -42,12 +42,12 @@ DBService dbService = new DBService();
 //		return Response.ok().entity(list).build();
 //	}
 	
-	@GET
-	@Path("/{manufacturer}")
-	public Response getDevicesByManufacturer(@QueryParam("manufacturer") String manufacturer){
-		List<Device> list = dbService.getDevicesByManufacturer(manufacturer);
-		return Response.ok().entity(list).build();
-	}
+//	@GET
+//	@Path("/{manufacturer}")
+//	public Response getDevicesByManufacturer(@QueryParam("manufacturer") String manufacturer){
+//		List<Device> list = dbService.getDevicesByManufacturer(manufacturer);
+//		return Response.ok().entity(list).build();
+//	}
 	
 //	@GET
 //	@Path("/{type}")
