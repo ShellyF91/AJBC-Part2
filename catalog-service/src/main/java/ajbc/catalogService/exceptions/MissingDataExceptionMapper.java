@@ -1,4 +1,4 @@
-package exceptions;
+package ajbc.catalogService.exceptions;
 
 
 import jakarta.ws.rs.core.Response;

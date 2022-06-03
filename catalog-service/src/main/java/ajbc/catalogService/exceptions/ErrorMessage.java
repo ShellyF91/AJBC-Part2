@@ -1,4 +1,4 @@
-package exceptions;
+package ajbc.catalogService.exceptions;
 
 public class ErrorMessage {
 	
