@@ -25,7 +25,7 @@ public class InventoryReport {
 	
 	public void startInventoryReport() throws InterruptedException {
 		ScheduledExecutorService clientsService = Executors.newScheduledThreadPool(NUM_THREADS);
-		clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing),1, 5, TimeUnit.SECONDS);
+		clientsService.scheduleAtFixedRate(new InventoryReportRunnable(ioTThing),1, 2, TimeUnit.SECONDS);
 	}
 	
 	public class InventoryReportRunnable implements Runnable{
@@ -37,6 +37,7 @@ public class InventoryReport {
 		
 		public InventoryReportRunnable(IoTThing ioTThing) {
 			this.ioTThing = ioTThing;
+			this.ioTThing.simulateInventoryChange();
 		}
 		
 		

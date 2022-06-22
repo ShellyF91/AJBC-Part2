@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.UUID;
 
 import ajbc.catalogService.DBService.DBService;
 import ajbc.catalogService.beans.ThingsFilterBean;
@@ -25,17 +26,17 @@ public class IoTThingResource {
 	
 	DBService dbService = new DBService();
 	
-	@GET
-	public Response getAllIoTThings(){
-		List<IoTThing> list= dbService.getAllIoTThings();
-		return Response.ok().entity(list).build();
-	}
-
 //	@GET
-//	@Path("/{id}")
-//	public IoTThing getThingsByID(@QueryParam("ID") String ID){
-//		return dbService.getThingsByID(ID);
+//	public Response getAllIoTThings(){
+//		List<IoTThing> list= dbService.getAllIoTThings();
+//		return Response.ok().entity(list).build();
 //	}
+
+	@GET
+	@Path("/{id}")
+	public IoTThing getThingsByID(@QueryParam("ID") UUID ID){
+		return dbService.getThingsByID(ID);
+	}
 	
 //	@GET
 //	@Path("/{model}")
@@ -60,8 +61,9 @@ public class IoTThingResource {
 	
 	
 	@GET
-	@Path("/filter")
 	public Response getThingsByFields(@BeanParam ThingsFilterBean thingsFilterBean) {
+		if(thingsFilterBean.getType()==null && thingsFilterBean.getModel() == null && thingsFilterBean.getManufacturer()==null)
+			return Response.ok().entity(dbService.getAllIoTThings()).build();
 		List<IoTThing> filteredList = dbService.getThingsByFields(thingsFilterBean.getType(), thingsFilterBean.getModel(), thingsFilterBean.getManufacturer());
 		return Response.ok().entity(filteredList).build();
 	}
