@@ -1,5 +1,9 @@
 package DAO;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -25,17 +29,16 @@ public class CustomersDAO {
 		customersCollection.insertOne(customer);
 	}
 
-	public Customer getCustomerById(ObjectId id) {
+	public Customer getCustomerById(int id) {
 		Customer customerFromDb = customersCollection.find(Filters.eq("_id", id)).first();
 		return customerFromDb;
 	}
 	
-	public Customer updateCustomerById(ObjectId id) {
-		Bson filter = Filters.eq("_id", id); 
-		Customer customerBeforeUpdate = getCustomerById(id);
+	public Customer updateCustomer(Customer customer) {
+		Bson filter = Filters.eq("_id", customer.getId()); 
 		FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
 				.returnDocument(ReturnDocument.AFTER);
-		Customer updatedCustomer = customersCollection.findOneAndReplace(filter, customerBeforeUpdate, returnDocAfterReplace);
+		Customer updatedCustomer = customersCollection.findOneAndReplace(filter, customer, returnDocAfterReplace);
 		return updatedCustomer;
 	}
 	
@@ -43,6 +46,12 @@ public class CustomersDAO {
 		Bson filter = Filters.eq("_id", id);
 		System.out.println(customersCollection.deleteOne(filter));
 	}
+	
+	public List<Order> getOrdersById(int id, MongoCollection<Order> orderCollection){
+		List<Order> ordersList = orderCollection.find(Filters.eq("customer_id", id)).into(new ArrayList<>());
+		return ordersList;
+	}
+
 
 
 

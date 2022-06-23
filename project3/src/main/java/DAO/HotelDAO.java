@@ -1,16 +1,29 @@
 package DAO;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import static com.mongodb.client.model.Sorts.*;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Accumulators.*;
+
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.model.Sorts;
 
 import models.Hotel;
+import models.Order;
 
 
 public class HotelDAO {
@@ -31,12 +44,11 @@ public class HotelDAO {
 		return hotelFromDb;
 	}
 	
-	public Hotel updateHotelById(ObjectId id) {
-		Bson filter = Filters.eq("_id", id); 
-		Hotel hotelBeforeUpdate = getHotelById(id);
+	public Hotel updateHotel(Hotel hotel) {
+		Bson filter = Filters.eq("_id", hotel.getId()); 
 		FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
 				.returnDocument(ReturnDocument.AFTER);
-		Hotel updatedHotel = hotelsCollection.findOneAndReplace(filter, hotelBeforeUpdate, returnDocAfterReplace);
+		Hotel updatedHotel = hotelsCollection.findOneAndReplace(filter, hotel, returnDocAfterReplace);
 		return updatedHotel;
 	}
 	
@@ -45,5 +57,28 @@ public class HotelDAO {
 		System.out.println(hotelsCollection.deleteOne(filter));
 
 	}
+	
+	public List<Hotel> findHotelsByCity(String city){
+		List<Hotel> hotels = hotelsCollection.find(Filters.eq("address.city", city)).into(new ArrayList<>());
+		return hotels;
+	}
+	
+	
+	public boolean isAvailableAtDate(ObjectId id, Date date, MongoCollection<Order> ordersCollection) {
+		OrdersDAO ordersDAO = new OrdersDAO(ordersCollection);
+		Hotel hotel = getHotelById(id);
+		int numberOfRooms = hotel.getRooms().size();
+		int counter = 0; 
+		for(int i = 0; i < hotel.getOrders().size(); i++) {
+			ObjectId orderid = hotel.getOrders().get(i);
+			Order order = ordersDAO.getOrderById(orderid);
+			if(order.getStartDate().equals(date))
+				counter++;
+		}
+		return counter < numberOfRooms;
+	}
+	
+	
+
 
 }

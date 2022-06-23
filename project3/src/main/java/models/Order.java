@@ -24,15 +24,6 @@ public class Order {
 	@BsonProperty(value = "total_price")
 	private double totalPrice;
 	
-	public Order(ObjectId id, int customerId, Date orderDate, Date startDate, int nights,
-			double totalPrice) {
-		this.id = id;
-		this.customerId = customerId;
-		this.orderDate = orderDate;
-		this.startDate = startDate;
-		this.nights = nights;
-		this.totalPrice = totalPrice;
-	}
 
 	public Order(int orderId, int customerId, Date orderDate, Date startDate, int nights, double totalPrice) {
 		this.orderId = orderId;
